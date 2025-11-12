@@ -3,18 +3,18 @@ from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
+
 VALID_TOKEN = "mysecrettoken"
 
 @app.route('/auth', methods=['POST', 'GET'])
 def authenticate():
-    # Try to get token from header first, then from JSON body
-    token = request.headers.get('Authorization')
-    if not token:
-        if request.is_json:
-            token = request.json.get('token')
-    # Check token
+    # Require Bearer token in Authorization header
+    auth_header = request.headers.get('Authorization', '')
+    if not auth_header.startswith('Bearer '):
+        return jsonify({"error": "Missing Bearer token in Authorization header."}), 401
+    token = auth_header[7:]  # Remove 'Bearer ' prefix
     if token != VALID_TOKEN:
-        return jsonify({"error": "Invalid or missing token."}), 401
+        return jsonify({"error": "Invalid token."}), 401
     return jsonify({
         "name": "Jane Doe",
         "title": "AI Developer"
