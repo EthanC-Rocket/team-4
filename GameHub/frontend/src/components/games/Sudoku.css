@@ -1,0 +1,115 @@
+.sudoku-controls {
+  margin-bottom: 20px;
+}
+
+.game-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.game-info p {
+  font-size: 18px;
+  font-weight: bold;
+  color: #667eea;
+}
+
+.game-info select,
+.game-info button {
+  padding: 8px 16px;
+  border: 2px solid #667eea;
+  border-radius: 5px;
+  background: white;
+  color: #667eea;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.game-info button:hover {
+  background: #667eea;
+  color: white;
+}
+
+.sudoku-board {
+  display: inline-block;
+  border: 3px solid #333;
+  margin: 0 auto 20px;
+}
+
+.sudoku-row {
+  display: flex;
+}
+
+.sudoku-cell {
+  width: 50px;
+  height: 50px;
+  border: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.sudoku-cell:nth-child(3n) {
+  border-right: 2px solid #333;
+}
+
+.sudoku-row:nth-child(3n) .sudoku-cell {
+  border-bottom: 2px solid #333;
+}
+
+.sudoku-cell.fixed {
+  background: #f0f0f0;
+  color: #333;
+  cursor: not-allowed;
+}
+
+.sudoku-cell.selected {
+  background: #d4e3fc;
+}
+
+.sudoku-cell:not(.fixed):hover {
+  background: #e8f0fe;
+}
+
+.number-pad {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.number-pad button {
+  width: 50px;
+  height: 50px;
+  font-size: 20px;
+  font-weight: bold;
+  border: 2px solid #667eea;
+  background: white;
+  color: #667eea;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.number-pad button:hover {
+  background: #667eea;
+  color: white;
+}
+
+.win-message {
+  margin-top: 20px;
+  padding: 20px;
+  background: #4caf50;
+  color: white;
+  text-align: center;
+  border-radius: 8px;
+  font-size: 20px;
+  font-weight: bold;
+}
