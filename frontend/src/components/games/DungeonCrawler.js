@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './DungeonCrawler.css';
+import log from '../../utils/logger';
 
 function DungeonCrawler({ user, token }) {
   const navigate = useNavigate();
@@ -85,6 +86,7 @@ function DungeonCrawler({ user, token }) {
   };
 
   const handleKeyPress = (e) => {
+    log.info(`Key pressed: ${e.key}`);
     if (!gameStarted || player.hp <= 0) return;
     
     let newX = player.x;
