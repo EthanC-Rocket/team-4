@@ -111,7 +111,7 @@ def get_scores():
             game_scores[score.game_name] = {
                 'game_name': score.game_name,
                 'score': score.score,
-                'score_metadata': score.metadata,
+                'score_metadata': score.score_metadata,
                 'created_at': score.created_at.isoformat()
             }
     
@@ -130,7 +130,7 @@ def add_score():
     if not game_name or score is None:
         return jsonify({'error': 'Missing required fields'}), 400
 
-    new_score = Score(user_id=user_id, game_name=game_name, score=score, metadata=metadata)
+    new_score = Score(user_id=user_id, game_name=game_name, score=score, score_metadata=metadata)
     db.session.add(new_score)
     db.session.commit()
 
@@ -140,7 +140,7 @@ def add_score():
             'id': new_score.id,
             'game_name': new_score.game_name,
             'score': new_score.score,
-            'score_metadata': new_score.metadata,
+            'score_metadata': new_score.score_metadata,
             'created_at': new_score.created_at.isoformat()
         }
     }), 201

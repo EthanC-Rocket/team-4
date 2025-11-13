@@ -3,10 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Chart, ArcElement, Tooltip, Legend } from 'chart.js';
 import './WouldYouRather.css';
-
-Chart.register(ArcElement, Tooltip, Legend);
 
 const API_URL = 'http://127.0.0.1:8000';
 const TOKEN = 'carol-secret-token'; // Replace with your actual token logic

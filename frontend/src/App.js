@@ -11,11 +11,14 @@ import PersonalityQuiz from './components/games/PersonalityQuiz';
 import WouldYouRather from './components/games/WouldYouRather';
 
 function App() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem('user');
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
   const [token, setToken] = useState(localStorage.getItem('token'));
 
   useEffect(() => {
-    if (token) {
+    if (token && !user) {
       // Verify token and get user info
       fetch('/api/user', {
         headers: {
@@ -26,26 +29,31 @@ function App() {
       .then(data => {
         if (data.id) {
           setUser(data);
+          localStorage.setItem('user', JSON.stringify(data));
         } else {
           localStorage.removeItem('token');
+          localStorage.removeItem('user');
           setToken(null);
         }
       })
       .catch(() => {
         localStorage.removeItem('token');
+        localStorage.removeItem('user');
         setToken(null);
       });
     }
-  }, [token]);
+  }, [token, user]);
 
   const handleLogin = (token, userData) => {
     localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(userData));
     setToken(token);
     setUser(userData);
   };
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     setToken(null);
     setUser(null);
   };

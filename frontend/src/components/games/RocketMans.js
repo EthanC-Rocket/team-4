@@ -192,7 +192,7 @@ function RocketMans({ user, token }) {
           body: JSON.stringify({
             game_name: 'RocketMans',
             score: gameStateRef.current.score,
-            metadata: `Score: ${gameStateRef.current.score}`
+            score_metadata: `Score: ${gameStateRef.current.score}`
           })
         });
       } catch (err) {
@@ -204,10 +204,14 @@ function RocketMans({ user, token }) {
   return (
     <div className="game-container">
       <button className="back-btn" onClick={() => navigate('/')}>← Back to Hub</button>
-      
+      {user ? (
+            <div className="user-info">
+              <p>Welcome to RocketMans {user.username}!</p>
+            </div>
+          ) : (
       <div className="game-header">
         <h1>🚀 RocketMans</h1>
-      </div>
+      </div> )}
 
       <div className="game-content">
         <div className="rocket-game">
