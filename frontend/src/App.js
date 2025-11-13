@@ -10,12 +10,14 @@ import DungeonCrawler from './components/games/DungeonCrawler';
 import PersonalityQuiz from './components/games/PersonalityQuiz';
 import WouldYouRather from './components/games/WouldYouRather';
 
+
 function App() {
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('user');
     return savedUser ? JSON.parse(savedUser) : null;
   });
   const [token, setToken] = useState(localStorage.getItem('token'));
+
 
   useEffect(() => {
     if (token && !user) {
@@ -70,6 +72,7 @@ function App() {
           <Route path="/game/dungeon" element={<DungeonCrawler user={user} token={token} />} />
           <Route path="/game/personality-quiz" element={<PersonalityQuiz user={user} token={token} />} />
           <Route path="/game/would-you-rather" element={<WouldYouRather user={user} token={token} />} />
+          <Route path="/game/zork" element={<Zork />} />
         </Routes>
       </div>
     </Router>

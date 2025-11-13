@@ -278,7 +278,11 @@ function DungeonCrawler({ user, token }) {
           body: JSON.stringify({
             game_name: 'Dungeon Crawler',
             score: finalScore,
+<<<<<<< HEAD
             score_metadata: `Level ${player.level}, Score: ${finalScore}`
+=======
+            metadata: `Level ${player.level}, Score: ${finalScore}`
+>>>>>>> 7c855b81c2c083dab2aa4f7b6aab87b38926a5ad
           })
         });
       } catch (err) {

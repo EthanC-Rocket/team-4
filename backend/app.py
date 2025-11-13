@@ -6,6 +6,7 @@ import bcrypt
 from datetime import datetime, timedelta
 import os
 from dotenv import load_dotenv
+from openai import OpenAI
 
 load_dotenv()
 
@@ -114,12 +115,8 @@ def login():
 @app.route('/api/scores', methods=['GET'])
 @jwt_required()
 def get_scores():
-    user_id = int(get_jwt_identity())
-    print(f"=== GET /api/scores ===")
-    print(f"User ID: {user_id}")
-    
+    user_id = get_jwt_identity()
     scores = Score.query.filter_by(user_id=user_id).order_by(Score.created_at.desc()).all()
-    print(f"Found {len(scores)} scores for user {user_id}")
     
     # Group scores by game and get best score for each
     game_scores = {}
@@ -132,8 +129,6 @@ def get_scores():
                 'created_at': score.created_at.isoformat()
             }
     
-    print(f"Returning {len(game_scores)} unique games")
-    print(f"Game scores: {list(game_scores.values())}")
     return jsonify(list(game_scores.values())), 200
 
 @app.route('/api/scores', methods=['POST'])
@@ -141,24 +136,18 @@ def get_scores():
 def add_score():
     user_id = int(get_jwt_identity())
     data = request.get_json()
-    
-    print(f"=== POST /api/scores ===")
-    print(f"User ID: {user_id}")
-    print(f"Request data: {data}")
+
     
     game_name = data.get('game_name')
     score = data.get('score')
     score_metadata = data.get('score_metadata', '')
 
     if not game_name or score is None:
-        print(f"ERROR: Missing fields - game_name: {game_name}, score: {score}")
         return jsonify({'error': 'Missing required fields'}), 400
 
     new_score = Score(user_id=user_id, game_name=game_name, score=score, score_metadata=score_metadata)
     db.session.add(new_score)
     db.session.commit()
-    
-    print(f"Score added successfully: {new_score.id}")
 
     return jsonify({
         'message': 'Score added successfully',
