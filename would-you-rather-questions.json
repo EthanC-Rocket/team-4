@@ -151,6 +151,134 @@
       "category": "Other",
       "option1Votes": 0,
       "option2Votes": 0
+    },
+    {
+      "id": 20,
+      "option1": "Option A",
+      "option2": "Option B",
+      "category": "TestCat",
+      "option1Votes": 0,
+      "option2Votes": 0
+    },
+    {
+      "id": 21,
+      "option1": "A",
+      "option2": "B",
+      "category": "TestCat",
+      "option1Votes": 1,
+      "option2Votes": 0
+    },
+    {
+      "id": 22,
+      "option1": "A",
+      "option2": "B",
+      "category": "TestCat",
+      "option1Votes": 0,
+      "option2Votes": 0
+    },
+    {
+      "id": 23,
+      "option1": "A",
+      "option2": "B",
+      "category": "SpecialCat",
+      "option1Votes": 0,
+      "option2Votes": 0
+    },
+    {
+      "id": 24,
+      "option1": "Option A",
+      "option2": "Option B",
+      "category": "TestCat",
+      "option1Votes": 0,
+      "option2Votes": 0
+    },
+    {
+      "id": 25,
+      "option1": "A",
+      "option2": "B",
+      "category": "TestCat",
+      "option1Votes": 1,
+      "option2Votes": 0
+    },
+    {
+      "id": 26,
+      "option1": "A",
+      "option2": "B",
+      "category": "TestCat",
+      "option1Votes": 0,
+      "option2Votes": 0
+    },
+    {
+      "id": 27,
+      "option1": "A",
+      "option2": "B",
+      "category": "SpecialCat",
+      "option1Votes": 0,
+      "option2Votes": 0
+    },
+    {
+      "id": 28,
+      "option1": "Option A",
+      "option2": "Option B",
+      "category": "TestCat",
+      "option1Votes": 0,
+      "option2Votes": 0
+    },
+    {
+      "id": 29,
+      "option1": "A",
+      "option2": "B",
+      "category": "TestCat",
+      "option1Votes": 1,
+      "option2Votes": 0
+    },
+    {
+      "id": 30,
+      "option1": "A",
+      "option2": "B",
+      "category": "TestCat",
+      "option1Votes": 0,
+      "option2Votes": 0
+    },
+    {
+      "id": 31,
+      "option1": "A",
+      "option2": "B",
+      "category": "SpecialCat",
+      "option1Votes": 0,
+      "option2Votes": 0
+    },
+    {
+      "id": 32,
+      "option1": "Option A",
+      "option2": "Option B",
+      "category": "TestCat",
+      "option1Votes": 0,
+      "option2Votes": 0
+    },
+    {
+      "id": 33,
+      "option1": "A",
+      "option2": "B",
+      "category": "TestCat",
+      "option1Votes": 1,
+      "option2Votes": 0
+    },
+    {
+      "id": 34,
+      "option1": "A",
+      "option2": "B",
+      "category": "TestCat",
+      "option1Votes": 0,
+      "option2Votes": 0
+    },
+    {
+      "id": 35,
+      "option1": "A",
+      "option2": "B",
+      "category": "SpecialCat",
+      "option1Votes": 0,
+      "option2Votes": 0
     }
   ]
 }

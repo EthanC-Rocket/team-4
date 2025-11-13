@@ -1,3 +1,41 @@
+"""
+questions_dao.py
+This module provides the QuestionsDAO class for managing "Would You Rather" questions stored in a JSON file.
+It supports creating, retrieving, updating, and deleting questions, as well as voting and category management.
+Classes:
+    QuestionsDAO: Data Access Object for "Would You Rather" questions.
+QuestionsDAO Methods:
+    __init__(json_file: str = "would-you-rather-questions.json"):
+        Initializes the DAO with the specified JSON file path.
+    _load_questions() -> List[Dict]:
+        Loads questions from the JSON file.
+    _save_questions() -> None:
+        Saves the current questions list to the JSON file.
+    _get_next_id() -> int:
+        Returns the next available unique ID for a new question.
+    create_question(option1: str, option2: str, category: str, option1_votes: int = 0, option2_votes: int = 0) -> Dict:
+        Creates and adds a new question to the collection.
+    get_random_question() -> Optional[Dict]:
+        Retrieves a random question from the collection.
+    delete_question(question_id: int) -> bool:
+        Deletes a question by its ID.
+    get_questions_by_category(category: str) -> List[Dict]:
+        Retrieves all questions in a specified category.
+    get_all_questions() -> List[Dict]:
+        Returns a copy of all questions.
+    get_question_by_id(question_id: int) -> Optional[Dict]:
+        Retrieves a question by its ID.
+    update_votes(question_id: int, option: int) -> bool:
+        Increments the vote count for a specified option of a question.
+    get_all_categories() -> List[str]:
+        Returns a list of all unique question categories.
+Example Usage:
+    - Initialize the DAO
+    - Retrieve a random question
+    - Get questions by category
+    - Create a new question
+    - List all categories
+    """
 import json
 import random
 from typing import List, Dict, Optional
