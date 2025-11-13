@@ -10,7 +10,8 @@ import DungeonCrawler from './components/games/DungeonCrawler';
 import PersonalityQuiz from './components/games/PersonalityQuiz';
 import WouldYouRather from './components/games/WouldYouRather';
 import Zork from './components/games/Zork'; 
-
+import Rocxs from './components/games/Rocxs';
+import OneNightAtRocket from './components/games/OneNightAtRocket';
 
 function App() {
   const [user, setUser] = useState(() => {
@@ -73,7 +74,9 @@ function App() {
           <Route path="/game/dungeon" element={<DungeonCrawler user={user} token={token} />} />
           <Route path="/game/personality-quiz" element={<PersonalityQuiz user={user} token={token} />} />
           <Route path="/game/would-you-rather" element={<WouldYouRather user={user} token={token} />} />
-          <Route path="/game/zork" element={<Zork />} />
+          <Route path="/game/zork" element={<Zork user={user} token={token} />} />
+          <Route path="/game/rocxs" element={<Rocxs user={user} token={token} />} />
+          <Route path="/game/one-night-at-rocket" element={<OneNightAtRocket user={user} token={token} />} />
         </Routes>
       </div>
     </Router>
