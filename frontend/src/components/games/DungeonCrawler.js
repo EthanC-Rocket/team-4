@@ -91,23 +91,37 @@ function DungeonCrawler({ user, token }) {
 
   const generateDungeon = (callback) => {
     const newDungeon = Array(DUNGEON_SIZE).fill(null).map(() => Array(DUNGEON_SIZE).fill('wall'));
-    
+    const roomCenters = [];
     // Create rooms
     for (let i = 0; i < 8; i++) {
       const roomWidth = Math.floor(Math.random() * 4) + 3;
       const roomHeight = Math.floor(Math.random() * 4) + 3;
       const roomX = Math.floor(Math.random() * (DUNGEON_SIZE - roomWidth - 2)) + 1;
       const roomY = Math.floor(Math.random() * (DUNGEON_SIZE - roomHeight - 2)) + 1;
-      
       for (let y = roomY; y < roomY + roomHeight; y++) {
         for (let x = roomX; x < roomX + roomWidth; x++) {
           newDungeon[y][x] = 'floor';
         }
       }
+      // Track room center
+      roomCenters.push({
+        x: Math.floor(roomX + roomWidth / 2),
+        y: Math.floor(roomY + roomHeight / 2)
+      });
     }
-    
-    setDungeon(newDungeon);
-    
+    // Connect rooms with corridors
+    for (let i = 1; i < roomCenters.length; i++) {
+      const prev = roomCenters[i - 1];
+      const curr = roomCenters[i];
+      // Horizontal corridor
+      for (let x = Math.min(prev.x, curr.x); x <= Math.max(prev.x, curr.x); x++) {
+        newDungeon[prev.y][x] = 'floor';
+      }
+      // Vertical corridor
+      for (let y = Math.min(prev.y, curr.y); y <= Math.max(prev.y, curr.y); y++) {
+        newDungeon[y][curr.x] = 'floor';
+      }
+    }
     if (callback) callback(newDungeon);
   };
 
@@ -155,25 +169,64 @@ function DungeonCrawler({ user, token }) {
     }
   };
 
+  const nextDungeon = (currentLevel, currentPlayer) => {
+    generateDungeon((newDungeon) => {
+      const positions = getShuffledFloorPositions(newDungeon);
+      // Player keeps position if possible, else gets new valid position
+      let startPos = positions.shift();
+      setPlayer({
+        x: startPos.x,
+        y: startPos.y,
+        hp: currentPlayer.hp,
+        maxHp: currentPlayer.maxHp,
+        attack: currentPlayer.attack,
+        level: currentPlayer.level,
+        exp: currentPlayer.exp
+      });
+      // Harder enemies
+      const newEnemies = [];
+      for (let i = 0; i < 10 && positions.length; i++) {
+        const pos = positions.shift();
+        newEnemies.push({
+          x: pos.x,
+          y: pos.y,
+          hp: 30 + i * 10 + currentLevel * 10,
+          maxHp: 30 + i * 10 + currentLevel * 10,
+          attack: 10 + i * 3 + currentLevel * 2,
+          type: i % 3 === 0 ? 'goblin' : i % 3 === 1 ? 'skeleton' : 'orc'
+        });
+      }
+      setEnemies(newEnemies);
+      // New items
+      const newItems = [];
+      for (let i = 0; i < 5 && positions.length; i++) {
+        const pos = positions.shift();
+        newItems.push({
+          x: pos.x,
+          y: pos.y,
+          type: i % 2 === 0 ? 'health' : 'weapon'
+        });
+      }
+      setItems(newItems);
+      setDungeon(newDungeon);
+      setMessage(`New dungeon! Enemies are stronger. Level: ${currentLevel}`);
+    });
+  };
+
   const combat = (enemyIndex, newX, newY) => {
     const enemy = enemies[enemyIndex];
     const playerDamage = player.attack;
     const enemyDamage = enemy.attack;
-    
     enemy.hp -= playerDamage;
-    
     if (enemy.hp <= 0) {
       setMessage(`You defeated the ${enemy.type}! +${enemy.maxHp} exp`);
       const newEnemies = [...enemies];
       newEnemies.splice(enemyIndex, 1);
       setEnemies(newEnemies);
-      
       const newExp = player.exp + enemy.maxHp;
       const newScore = score + enemy.maxHp;
       setScore(newScore);
-      
       let newPlayer = { ...player, x: newX, y: newY, exp: newExp };
-      
       if (newExp >= 100 * player.level) {
         newPlayer.level++;
         newPlayer.maxHp += 20;
@@ -181,23 +234,22 @@ function DungeonCrawler({ user, token }) {
         newPlayer.attack += 5;
         setMessage(`Level Up! You are now level ${newPlayer.level}!`);
       }
-      
       setPlayer(newPlayer);
-      
       if (newEnemies.length === 0) {
-        endGame(newScore);
+        // Instead of ending game, generate next dungeon
+        nextDungeon(newPlayer.level, newPlayer);
+        return;
       }
     } else {
       const newPlayer = { ...player, hp: Math.max(0, player.hp - enemyDamage) };
       setPlayer(newPlayer);
       setMessage(`You hit the ${enemy.type} for ${playerDamage} damage. It hits you back for ${enemyDamage}!`);
-      
       if (newPlayer.hp <= 0) {
         setMessage('You have been defeated! Game Over.');
         endGame(score);
       }
     }
-  };
+  }; // close combat function
 
   const collectItem = (itemIndex) => {
     const item = items[itemIndex];
@@ -236,71 +288,48 @@ function DungeonCrawler({ user, token }) {
   };
 
   const getCellContent = (x, y) => {
-    if (player.x === x && player.y === y) return '🧙';
-    
+    if (x === player.x && y === player.y) {
+      return '🧙';
+    }
     const enemy = enemies.find(e => e.x === x && e.y === y);
     if (enemy) {
       if (enemy.type === 'goblin') return '👺';
       if (enemy.type === 'skeleton') return '💀';
       return '👹';
     }
-    
     const item = items.find(i => i.x === x && i.y === y);
     if (item) {
       return item.type === 'health' ? '❤️' : '⚔️';
     }
-    
     return '';
   };
 
   return (
-    <div className="game-container">
-      <button className="back-btn" onClick={() => navigate('/')}>← Back to Hub</button>
-      
-      <div className="game-header">
-        <h1>⚔️ Dungeon Crawler</h1>
+    <div className="dungeon-crawler">
+      <div className="info">
+        <div>HP: {player.hp}/{player.maxHp}</div>
+        <div>Attack: {player.attack}</div>
+        <div>Level: {player.level}</div>
+        <div>Score: {score}</div>
       </div>
-
-      <div className="game-content">
-        {!gameStarted ? (
-          <div className="start-screen">
-            <h2>Enter the Dungeon</h2>
-            <p>Defeat all enemies to win!</p>
-            <button onClick={startGame} className="start-btn">Start Adventure</button>
-          </div>
-        ) : (
-          <>
-            <div className="game-stats">
-              <div className="stat">Level: {player.level}</div>
-              <div className="stat">HP: {player.hp}/{player.maxHp}</div>
-              <div className="stat">Attack: {player.attack}</div>
-              <div className="stat">EXP: {player.exp}</div>
-              <div className="stat">Score: {score}</div>
-            </div>
-
-            <div className="dungeon-grid">
-              {dungeon.map((row, y) => (
-                <div key={y} className="dungeon-row">
-                  {row.map((cell, x) => (
-                    <div
-                      key={`${x}-${y}`}
-                      className={`dungeon-cell ${cell}`}
-                    >
-                      {getCellContent(x, y)}
-                    </div>
-                  ))}
+      <div className="message">{message}</div>
+      <div className="dungeon">
+        {dungeon.map((row, y) => (
+          <div key={y} className="dungeon-row">
+            {row.map((cell, x) => {
+              let cellType = cell === 'floor' ? 'floor' : 'wall';
+              return (
+                <div key={x} className={`dungeon-cell ${cellType}`}>
+                  {getCellContent(x, y)}
                 </div>
-              ))}
-            </div>
-
-            <div className="game-message">{message}</div>
-
-            <div className="controls-info">
-              <p>Use arrow keys to move and attack enemies</p>
-              <p>🧙 Player | 👺 Goblin | 💀 Skeleton | 👹 Orc | ❤️ Health | ⚔️ Weapon</p>
-            </div>
-          </>
-        )}
+              );
+            })}
+          </div>
+        ))}
+      </div>
+      <div className="controls">
+        <button onClick={startGame} disabled={gameStarted}>Start Game</button>
+        <button onClick={() => navigate('/')} >Leave Dungeon</button>
       </div>
     </div>
   );
