@@ -33,9 +33,7 @@ class QuestionEntity:
         # Options must be different
         if str(self.option1).strip().lower() == str(self.option2).strip().lower():
             errors.append("Option 1 and Option 2 must be different.")
-        # Category validity
-        if self.category not in self.valid_categories:
-            errors.append(f"Invalid category: {self.category}. Must be one of: {', '.join(self.valid_categories)}")
+        # Allow any category (no validity check)
         return errors
 
     def is_valid(self) -> bool:

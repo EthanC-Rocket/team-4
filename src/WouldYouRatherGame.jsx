@@ -4,6 +4,7 @@ import axios from 'axios';
 const API_URL = 'http://127.0.0.1:8000/questions/random';
 const TOKEN = 'mysecrettoken'; // Replace with your actual token logic
 
+
 function WouldYouRatherGame() {
   const [question, setQuestion] = useState(null);
   const [loading, setLoading] = useState(true);

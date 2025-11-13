@@ -3,8 +3,10 @@ import requests
 import random
 from questions_dao import QuestionsDAO
 from question_validator import QuestionEntity
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 dao = QuestionsDAO()
 AUTH_SERVER_URL = "http://127.0.0.1:5000/auth"
 
@@ -53,6 +55,16 @@ def upvote_option(question_id):
     if not success:
         return jsonify({"error": "Question not found or invalid option."}), 404
     return jsonify({"message": f"Upvoted option {option} for question {question_id}"})
+
+@app.route("/questions/<int:question_id>", methods=["GET"])
+def get_question_by_id(question_id):
+    token = request.headers.get("token")
+    if not token or not authenticate_token(token):
+        return jsonify({"error": "Unauthorized or not AI Developer."}), 401
+    question = dao.get_question_by_id(question_id)
+    if not question:
+        return jsonify({"error": "Question not found."}), 404
+    return jsonify(question)
 
 @app.route("/questions/<int:question_id>", methods=["DELETE"])
 def delete_question(question_id):

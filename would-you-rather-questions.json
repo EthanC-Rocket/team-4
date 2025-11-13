@@ -13,7 +13,7 @@
       "option1": "Live in a world without music",
       "option2": "Live in a world without movies",
       "category": "Entertainment",
-      "option1Votes": 0,
+      "option1Votes": 1,
       "option2Votes": 0
     },
     {
@@ -29,7 +29,7 @@
       "option1": "Have the ability to read minds",
       "option2": "Have the ability to see the future",
       "category": "Superpowers",
-      "option1Votes": 0,
+      "option1Votes": 1,
       "option2Votes": 0
     },
     {
@@ -37,7 +37,7 @@
       "option1": "Travel to the past",
       "option2": "Travel to the future",
       "category": "Time Travel",
-      "option1Votes": 0,
+      "option1Votes": 1,
       "option2Votes": 0
     },
     {
@@ -53,7 +53,7 @@
       "option1": "Live without the internet",
       "option2": "Live without air conditioning/heating",
       "category": "Technology",
-      "option1Votes": 0,
+      "option1Votes": 2,
       "option2Votes": 0
     },
     {
@@ -70,7 +70,7 @@
       "option2": "Be rich but unknown",
       "category": "Lifestyle",
       "option1Votes": 0,
-      "option2Votes": 0
+      "option2Votes": 1
     },
     {
       "id": 10,
@@ -78,7 +78,7 @@
       "option2": "Only eat savory food for the rest of your life",
       "category": "Food",
       "option1Votes": 0,
-      "option2Votes": 0
+      "option2Votes": 1
     },
     {
       "id": 11,
@@ -118,13 +118,21 @@
       "option2": "Never have to eat again",
       "category": "Basic Needs",
       "option1Votes": 0,
-      "option2Votes": 0
+      "option2Votes": 1
     },
     {
       "id": 16,
       "option1": "Always be stuck in traffic",
       "option2": "Always have a slow internet connection",
       "category": "Technology",
+      "option1Votes": 0,
+      "option2Votes": 1
+    },
+    {
+      "id": 17,
+      "option1": "Fly",
+      "option2": "Jump",
+      "category": "Fun",
       "option1Votes": 0,
       "option2Votes": 0
     }
