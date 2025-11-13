@@ -57,6 +57,12 @@ function Hub({ user, onLogout, token }) {
       path: '/game/would-you-rather',
       icon: '🤔',
       description: 'Make tough choices'
+    },
+    {
+      name: 'One Night At Rocket',
+      path: '/game/one-night-at-rocket',
+      icon: '👾',
+      description: 'Survive the night at Rocket HQ!'
     }
   ];
 

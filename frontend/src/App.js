@@ -10,6 +10,8 @@ import DungeonCrawler from './components/games/DungeonCrawler';
 import PersonalityQuiz from './components/games/PersonalityQuiz';
 import WouldYouRather from './components/games/WouldYouRather';
 
+import OneNightAtRocket from './components/games/OneNightAtRocket';
+
 function App() {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem('token'));
@@ -62,6 +64,7 @@ function App() {
           <Route path="/game/dungeon" element={<DungeonCrawler user={user} token={token} />} />
           <Route path="/game/personality-quiz" element={<PersonalityQuiz user={user} token={token} />} />
           <Route path="/game/would-you-rather" element={<WouldYouRather user={user} token={token} />} />
+            <Route path="/game/one-night-at-rocket" element={<OneNightAtRocket user={user} token={token} />} />
         </Routes>
       </div>
     </Router>
