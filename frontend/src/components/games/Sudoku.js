@@ -146,7 +146,7 @@ function Sudoku({ user, token }) {
           body: JSON.stringify({
             game_name: 'Sudoku',
             score: score,
-            metadata: `Completed in ${timeElapsed} seconds`
+            score_metadata: `Completed in ${timeElapsed} seconds`
           })
         });
       } catch (err) {

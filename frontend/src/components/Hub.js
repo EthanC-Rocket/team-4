@@ -13,14 +13,20 @@ function Hub({ user, onLogout, token }) {
 
   const fetchScores = async () => {
     try {
+      console.log('Fetching scores for user:', user?.username, 'with token:', token ? 'present' : 'missing');
       const response = await fetch('/api/scores', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
+      console.log('Response status:', response.status);
       const data = await response.json();
+      console.log('Response data:', data);
       if (response.ok) {
+        console.log('Setting scores:', data);
         setScores(data);
+      } else {
+        console.error('Failed to fetch scores:', response.status, data);
       }
     } catch (err) {
       console.error('Failed to fetch scores:', err);
@@ -57,6 +63,12 @@ function Hub({ user, onLogout, token }) {
       path: '/game/would-you-rather',
       icon: '🤔',
       description: 'Make tough choices'
+    },
+    {
+      name: 'Zork',
+      path: '/game/zork',
+      icon: '📜',
+      description: 'Text adventure in classic D&D style'
     }
   ];
 

@@ -42,7 +42,7 @@ The backend will run on `http://localhost:5000`
 
 ### Frontend Setup (React)
 
-1. Open a new terminal and navigate to the frontend directory:
+1. Navigate to the frontend directory:
 ```powershell
 cd GameHub\frontend
 ```
@@ -52,7 +52,12 @@ cd GameHub\frontend
 npm install
 ```
 
-3. Start the React development server:
+3. Install loglevel for logging:
+```powershell
+npm install loglevel
+```
+
+4. Start the React development server:
 ```powershell
 npm start
 ```

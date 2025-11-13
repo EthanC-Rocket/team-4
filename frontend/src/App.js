@@ -9,13 +9,19 @@ import RocketMans from './components/games/RocketMans';
 import DungeonCrawler from './components/games/DungeonCrawler';
 import PersonalityQuiz from './components/games/PersonalityQuiz';
 import WouldYouRather from './components/games/WouldYouRather';
+import Zork from './components/games/Zork'; 
+
 
 function App() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem('user');
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
   const [token, setToken] = useState(localStorage.getItem('token'));
 
+
   useEffect(() => {
-    if (token) {
+    if (token && !user) {
       // Verify token and get user info
       fetch('/api/user', {
         headers: {
@@ -26,26 +32,31 @@ function App() {
       .then(data => {
         if (data.id) {
           setUser(data);
+          localStorage.setItem('user', JSON.stringify(data));
         } else {
           localStorage.removeItem('token');
+          localStorage.removeItem('user');
           setToken(null);
         }
       })
       .catch(() => {
         localStorage.removeItem('token');
+        localStorage.removeItem('user');
         setToken(null);
       });
     }
-  }, [token]);
+  }, [token, user]);
 
   const handleLogin = (token, userData) => {
     localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(userData));
     setToken(token);
     setUser(userData);
   };
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     setToken(null);
     setUser(null);
   };
@@ -62,6 +73,7 @@ function App() {
           <Route path="/game/dungeon" element={<DungeonCrawler user={user} token={token} />} />
           <Route path="/game/personality-quiz" element={<PersonalityQuiz user={user} token={token} />} />
           <Route path="/game/would-you-rather" element={<WouldYouRather user={user} token={token} />} />
+          <Route path="/game/zork" element={<Zork />} />
         </Routes>
       </div>
     </Router>
