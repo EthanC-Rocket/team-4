@@ -6,6 +6,8 @@ import bcrypt
 from datetime import datetime, timedelta
 import os
 from dotenv import load_dotenv
+from quiz_engine import AthleteQuizEngine
+from openai import OpenAI
 
 load_dotenv()
 
@@ -19,6 +21,26 @@ app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=1)
 CORS(app)
 db = SQLAlchemy(app)
 jwt = JWTManager(app)
+
+# Initialize quiz engine
+quiz_engine = AthleteQuizEngine()
+
+# Initialize OpenAI client
+client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+
+
+# Handle JWT errors
+@jwt.unauthorized_loader
+def unauthorized_callback(callback):
+    return jsonify({'error': 'Missing or invalid authorization header'}), 401
+
+@jwt.invalid_token_loader
+def invalid_token_callback(callback):
+    return jsonify({'error': 'Invalid token', 'message': str(callback)}), 422
+
+@jwt.expired_token_loader
+def expired_token_callback(jwt_header, jwt_payload):
+    return jsonify({'error': 'Token has expired'}), 401
 
 # Models
 class User(db.Model):
@@ -64,7 +86,7 @@ def register():
     db.session.add(new_user)
     db.session.commit()
 
-    access_token = create_access_token(identity=new_user.id)
+    access_token = create_access_token(identity=str(new_user.id))
     return jsonify({
         'message': 'User created successfully',
         'access_token': access_token,
@@ -88,7 +110,7 @@ def login():
     if not user or not bcrypt.checkpw(password.encode('utf-8'), user.password_hash.encode('utf-8')):
         return jsonify({'error': 'Invalid credentials'}), 401
 
-    access_token = create_access_token(identity=user.id)
+    access_token = create_access_token(identity=str(user.id))
     return jsonify({
         'access_token': access_token,
         'user': {
@@ -111,7 +133,7 @@ def get_scores():
             game_scores[score.game_name] = {
                 'game_name': score.game_name,
                 'score': score.score,
-                'score_metadata': score.metadata,
+                'score_metadata': score.score_metadata,
                 'created_at': score.created_at.isoformat()
             }
     
@@ -120,17 +142,18 @@ def get_scores():
 @app.route('/api/scores', methods=['POST'])
 @jwt_required()
 def add_score():
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     data = request.get_json()
+
     
     game_name = data.get('game_name')
     score = data.get('score')
-    metadata = data.get('metadata', '')
+    score_metadata = data.get('score_metadata', '')
 
     if not game_name or score is None:
         return jsonify({'error': 'Missing required fields'}), 400
 
-    new_score = Score(user_id=user_id, game_name=game_name, score=score, metadata=metadata)
+    new_score = Score(user_id=user_id, game_name=game_name, score=score, score_metadata=score_metadata)
     db.session.add(new_score)
     db.session.commit()
 
@@ -140,7 +163,7 @@ def add_score():
             'id': new_score.id,
             'game_name': new_score.game_name,
             'score': new_score.score,
-            'score_metadata': new_score.metadata,
+            'score_metadata': new_score.score_metadata,
             'created_at': new_score.created_at.isoformat()
         }
     }), 201
@@ -148,7 +171,7 @@ def add_score():
 @app.route('/api/user', methods=['GET'])
 @jwt_required()
 def get_user():
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     user = User.query.get(user_id)
     
     if not user:
@@ -159,6 +182,55 @@ def get_user():
         'username': user.username,
         'email': user.email
     }), 200
+
+@app.route('/api/athlete-quiz/calculate', methods=['POST'])
+def calculate_athlete_quiz():
+    """Calculate athlete personality quiz results."""
+    data = request.get_json()
+    answers = data.get('answers', [])
+    
+    if not answers:
+        return jsonify({'error': 'No answers provided'}), 400
+    
+    try:
+        result = quiz_engine.calculate_result(answers)
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/athlete-quiz/profiles', methods=['GET'])
+def get_athlete_profiles():
+    """Get all athlete personality profiles."""
+    profiles = quiz_engine.get_all_profiles()
+    return jsonify(profiles), 200
+
+@app.route('/api/athlete-quiz/profile/<athlete_type>', methods=['GET'])
+def get_athlete_profile(athlete_type):
+    """Get a specific athlete personality profile."""
+    profile = quiz_engine.get_profile(athlete_type)
+    if profile:
+        return jsonify(profile), 200
+    return jsonify({'error': 'Profile not found'}), 404
+
+@app.route('/api/zork', methods=['POST'])
+def play_zork():
+    try:
+        user_input = request.json.get('input', '')
+        
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": "You are playing the game Zork. Respond only with game actions and descriptions."},
+                {"role": "user", "content": user_input}
+            ]
+        )
+        
+        return jsonify({
+            'response': response.choices[0].message.content
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

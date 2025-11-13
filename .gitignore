@@ -70,4 +70,5 @@ Thumbs.db
 *.log
 =======
 node_modules/
->>>>>>> 1cea002c6abf7ee262d6be7f31dee3301445ad17
+.env
+gamehub.db

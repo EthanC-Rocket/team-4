@@ -1,101 +1,113 @@
-# Quick Start Guide - Sudoku Game
+# 🚀 QUICK START GUIDE - Athlete Personality Quiz
 
-## Instant Play
+## Prerequisites Check ✅
 
-1. **Navigate to the project directory:**
-   ```bash
-   cd "c:\Users\odurosinmi\OneDrive - Rocket Software, Inc\Desktop\AI Adaptation\Sudoku\team-4"
-   ```
-
-2. **Run the game:**
-   ```bash
-   python main.py
-   ```
-
-3. **Choose your difficulty** (Easy, Medium, or Hard)
-
-4. **Play using these commands:**
-   - `place 3 5 7` - Place number 7 at row 3, column 5
-   - `clear 3 5` - Clear the cell at row 3, column 5
-   - `hint` - Get a hint
-   - `check` - Verify your solution
-   - `help` - Show all commands
-   - `quit` - Exit game
-
-## Example Game Session
-
+First, verify Python is installed:
+```powershell
+python --version
 ```
-> place 1 3 4    # Place 4 at position (1,3)
-> place 2 5 7    # Place 7 at position (2,5)
-> hint           # Get a hint if stuck
-> check          # Check if solution is valid
+If you see "Python 3.x.x", you're good to go! 
+
+If not, install Python from: https://python.org/downloads/
+
+## Option 1: Automated Setup (Easiest) 🎯
+
+**Windows Batch File:**
+```cmd
+run.bat
 ```
 
-## Testing the Installation
-
-Quick test to verify everything works:
-
-```bash
-python -c "from Sudoku.game import SudokuGame; print('✓ Sudoku game ready!')"
+**PowerShell Script:**
+```powershell
+.\run.ps1
 ```
 
-## Running Tests
+## Option 2: Manual Setup (Step by Step) 🔧
 
-If you have pytest installed:
+1. **Create Virtual Environment**
+```powershell
+python -m venv venv
+venv\Scripts\activate
+```
 
-```bash
-# Install testing dependencies
+2. **Install Dependencies**
+```powershell
 pip install -r requirements.txt
-
-# Run all tests
-pytest tests/ -v
-
-# Run with coverage
-pytest tests/ --cov=Sudoku
 ```
 
-## Integration Example
-
-To use in your own Python project:
-
-```python
-from Sudoku.game import SudokuGame
-
-# Start a game
-game = SudokuGame()
-game.play()
+3. **Setup Environment**
+```powershell
+copy .env.example .env
+# Edit .env file if needed
 ```
 
-Or generate puzzles programmatically:
-
-```python
-from Sudoku.generator import generate_puzzle
-from Sudoku.board import SudokuBoard
-
-# Generate an easy puzzle
-puzzle = generate_puzzle("easy")
-board = SudokuBoard(puzzle)
-board.display()
+4. **Run Application**
+```powershell
+cd src
+python -m web.app
 ```
 
-## Troubleshooting
+## Option 3: Direct Run 🏃‍♂️
 
-**Issue:** `ModuleNotFoundError: No module named 'Sudoku'`
-- **Solution:** Make sure you're running from the project root directory
+If you have Python and want to run immediately:
+```powershell
+python app.py
+```
 
-**Issue:** Game doesn't display correctly
-- **Solution:** Ensure your terminal supports UTF-8 encoding
+## Access the Quiz 🌐
 
-**Issue:** Need to clear terminal screen
-- **Solution:** The game automatically clears screen between moves
+Once running, open your browser to:
+**http://localhost:5000**
 
-## Next Steps
+## What You'll See 👀
 
-- Read the full documentation in `README.md`
-- Explore the code in the `Sudoku/` directory
-- Check out the tests in `tests/` for usage examples
-- Try modifying difficulty levels or adding new features
+1. **Landing Page**: Overview of athlete types and features
+2. **Quiz Interface**: 5 personality questions
+3. **Results Page**: Your athlete type with detailed profile
 
----
+## Quiz Features 🎮
 
-**Ready to play? Run `python main.py` now!** 🎮
+- **7 Athlete Types**: Team Leader, Individual Competitor, Endurance, Power, Tactical, Creative, Adaptable
+- **Smart Scoring**: Algorithm matches your personality to athlete type
+- **Detailed Profiles**: Strengths, development areas, famous examples
+- **Responsive Design**: Works on desktop and mobile
+
+## Sample Quiz Flow 📋
+
+1. Enter your name (optional)
+2. Answer 5 personality questions:
+   - Team role preferences
+   - Training style
+   - Spotlight comfort level
+   - Challenge approach
+   - Pressure performance
+3. Get your athlete type result!
+
+## Troubleshooting 🔧
+
+**Python not found?**
+- Install from python.org
+- Check "Add Python to PATH" during installation
+
+**Port already in use?**
+- Change port in app.py: `app.run(port=5001)`
+
+**Dependencies fail to install?**
+- Update pip: `python -m pip install --upgrade pip`
+- Try: `pip install -r requirements.txt --user`
+
+## Testing the Application 🧪
+
+Run tests to verify everything works:
+```powershell
+pytest
+```
+
+## Next Steps 🚀
+
+- Customize athlete types in `src/quiz/engine.py`
+- Add more questions to the quiz
+- Enable OpenAI integration for personalized results
+- Deploy to cloud platforms
+
+**Enjoy discovering your athletic personality! 🏆**
