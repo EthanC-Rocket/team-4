@@ -192,7 +192,7 @@ function RocketMans({ user, token }) {
           body: JSON.stringify({
             game_name: 'RocketMans',
             score: gameStateRef.current.score,
-            metadata: `Score: ${gameStateRef.current.score}`
+            score_metadata: `Score: ${gameStateRef.current.score}`
           })
         });
       } catch (err) {
