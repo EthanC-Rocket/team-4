@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-
+import adImg from './games/Images/ad.png';
+import './Hub.css';
 function Hub({ user, onLogout, token }) {
   const [scores, setScores] = useState([]);
+  const [showAd, setShowAd] = useState(true);
   const navigate = useNavigate();
+  const handleCloseAd = () => {
+    setShowAd(false);
+  };
 
   useEffect(() => {
     if (user && token) {
@@ -63,11 +68,23 @@ function Hub({ user, onLogout, token }) {
       path: '/game/one-night-at-rocket',
       icon: '👾',
       description: 'Survive the night at Rocket HQ!'
+    },
+    {
+      name: 'ROCXS',
+      path: '/game/rocxs',
+      icon: '🪨',
+      description: 'The ultimate ROCXS challenge!'
     }
   ];
 
   return (
     <div className="hub-container">
+      {showAd && (
+        <div className="hub-ad-modal">
+          <img src={adImg} alt="Ad" className="hub-ad-image" />
+          <button className="hub-ad-close" onClick={handleCloseAd}>X</button>
+        </div>
+      )}
       {user && (
         <div className="sidebar">
           <h2>Your Scores</h2>
@@ -124,3 +141,4 @@ function Hub({ user, onLogout, token }) {
 }
 
 export default Hub;
+
