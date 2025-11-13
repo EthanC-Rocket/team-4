@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Sudoku.css';
 
@@ -10,9 +10,47 @@ function Sudoku({ user, token }) {
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [gameWon, setGameWon] = useState(false);
   const [difficulty, setDifficulty] = useState('medium');
+  const canvasRef = useRef(null);
 
   useEffect(() => {
     generateNewGame(difficulty);
+  }, []);
+
+  // Matrix rain effect
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+
+    const fontSize = 14;
+    const columns = Math.floor(canvas.width / fontSize);
+    const drops = Array(columns).fill(1);
+    
+    const matrixChars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+    const draw = () => {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = '#0F0';
+      ctx.font = `${fontSize}px monospace`;
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = matrixChars[Math.floor(Math.random() * matrixChars.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+    };
+
+    const interval = setInterval(draw, 50);
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -162,58 +200,65 @@ function Sudoku({ user, token }) {
   };
 
   return (
-    <div className="game-container">
-      <button className="back-btn" onClick={() => navigate('/')}>← Back to Hub</button>
+    <div className="game-container sudoku-matrix-container">
+      <canvas ref={canvasRef} className="matrix-rain"></canvas>
       
-      <div className="game-header">
-        <h1>🔢 Sudoku</h1>
-      </div>
+      <div className="sudoku-content-wrapper">
+        <button className="back-btn matrix-btn" onClick={() => navigate('/')}>← Back to Hub</button>
+        
+        <div className="game-header">
+          <h1 className="matrix-title">⚡ MATRIX SUDOKU ⚡</h1>
+        </div>
 
-      <div className="game-content">
+        <div className="game-content">
         <div className="sudoku-controls">
-          <div className="game-info">
-            <p>Time: {formatTime(timeElapsed)}</p>
-            <select value={difficulty} onChange={(e) => { setDifficulty(e.target.value); generateNewGame(e.target.value); }}>
-              <option value="easy">Easy</option>
-              <option value="medium">Medium</option>
-              <option value="hard">Hard</option>
+          <div className="game-info matrix-controls">
+            <p className="matrix-text">⏱ TIME: {formatTime(timeElapsed)}</p>
+            <select className="matrix-select" value={difficulty} onChange={(e) => { setDifficulty(e.target.value); generateNewGame(e.target.value); }}>
+              <option value="easy">EASY MODE</option>
+              <option value="medium">MEDIUM MODE</option>
+              <option value="hard">HARD MODE</option>
             </select>
-            <button onClick={() => generateNewGame(difficulty)}>New Game</button>
+            <button className="matrix-btn" onClick={() => generateNewGame(difficulty)}>⟳ NEW GAME</button>
           </div>
         </div>
 
-        <div className="sudoku-board">
+        <div className="sudoku-board matrix-board">
           {board.map((row, rowIndex) => (
             <div key={rowIndex} className="sudoku-row">
               {row.map((cell, colIndex) => (
                 <div
                   key={`${rowIndex}-${colIndex}`}
-                  className={`sudoku-cell ${
-                    initialBoard[rowIndex][colIndex] !== 0 ? 'fixed' : ''
+                  className={`sudoku-cell matrix-cell ${
+                    initialBoard[rowIndex][colIndex] !== 0 ? 'fixed matrix-fixed' : 'matrix-editable'
                   } ${
-                    selectedCell?.row === rowIndex && selectedCell?.col === colIndex ? 'selected' : ''
+                    selectedCell?.row === rowIndex && selectedCell?.col === colIndex ? 'selected matrix-selected' : ''
                   }`}
                   onClick={() => handleCellClick(rowIndex, colIndex)}
                 >
-                  {cell !== 0 ? cell : ''}
+                  {cell !== 0 ? <span className="matrix-digit">{cell}</span> : ''}
                 </div>
               ))}
             </div>
           ))}
         </div>
 
-        <div className="number-pad">
+        <div className="number-pad matrix-pad">
           {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
-            <button key={num} onClick={() => handleNumberInput(num)}>{num}</button>
+            <button key={num} className="matrix-num-btn" onClick={() => handleNumberInput(num)}>
+              {num}
+            </button>
           ))}
-          <button onClick={() => handleNumberInput(0)}>Clear</button>
+          <button className="matrix-num-btn matrix-clear" onClick={() => handleNumberInput(0)}>✕</button>
         </div>
 
         {gameWon && (
-          <div className="win-message">
-            🎉 Congratulations! You won in {formatTime(timeElapsed)}!
+          <div className="win-message matrix-win">
+            <div className="matrix-win-text">⚡ SYSTEM BREACH SUCCESSFUL ⚡</div>
+            <div className="matrix-win-time">TIME: {formatTime(timeElapsed)}</div>
           </div>
         )}
+        </div>
       </div>
     </div>
   );
