@@ -6,6 +6,7 @@ import bcrypt
 from datetime import datetime, timedelta
 import os
 from dotenv import load_dotenv
+from quiz_engine import AthleteQuizEngine
 from openai import OpenAI
 
 load_dotenv()
@@ -21,6 +22,10 @@ CORS(app)
 db = SQLAlchemy(app)
 jwt = JWTManager(app)
 
+# Initialize quiz engine
+quiz_engine = AthleteQuizEngine()
+
+# Initialize OpenAI client
 client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
 
@@ -177,6 +182,35 @@ def get_user():
         'username': user.username,
         'email': user.email
     }), 200
+
+@app.route('/api/athlete-quiz/calculate', methods=['POST'])
+def calculate_athlete_quiz():
+    """Calculate athlete personality quiz results."""
+    data = request.get_json()
+    answers = data.get('answers', [])
+    
+    if not answers:
+        return jsonify({'error': 'No answers provided'}), 400
+    
+    try:
+        result = quiz_engine.calculate_result(answers)
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/athlete-quiz/profiles', methods=['GET'])
+def get_athlete_profiles():
+    """Get all athlete personality profiles."""
+    profiles = quiz_engine.get_all_profiles()
+    return jsonify(profiles), 200
+
+@app.route('/api/athlete-quiz/profile/<athlete_type>', methods=['GET'])
+def get_athlete_profile(athlete_type):
+    """Get a specific athlete personality profile."""
+    profile = quiz_engine.get_profile(athlete_type)
+    if profile:
+        return jsonify(profile), 200
+    return jsonify({'error': 'Profile not found'}), 404
 
 @app.route('/api/zork', methods=['POST'])
 def play_zork():
