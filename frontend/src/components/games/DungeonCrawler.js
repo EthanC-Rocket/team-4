@@ -22,15 +22,74 @@ function DungeonCrawler({ user, token }) {
     }
   }, [gameStarted, player, enemies]);
 
-  const startGame = () => {
-    generateDungeon();
-    setGameStarted(true);
-    setPlayer({ x: 1, y: 1, hp: 100, maxHp: 100, attack: 10, level: 1, exp: 0 });
-    setScore(0);
-    setMessage('Welcome to the dungeon! Use arrow keys to move.');
+  const getRandomFloorPosition = (dungeon) => {
+    const floorPositions = [];
+    for (let y = 0; y < dungeon.length; y++) {
+      for (let x = 0; x < dungeon[y].length; x++) {
+        if (dungeon[y][x] === 'floor') {
+          floorPositions.push({ x, y });
+        }
+      }
+    }
+    return floorPositions[Math.floor(Math.random() * floorPositions.length)] || { x: 1, y: 1 };
   };
 
-  const generateDungeon = () => {
+  const getShuffledFloorPositions = (dungeon) => {
+    const floorPositions = [];
+    for (let y = 0; y < dungeon.length; y++) {
+      for (let x = 0; x < dungeon[y].length; x++) {
+        if (dungeon[y][x] === 'floor') {
+          floorPositions.push({ x, y });
+        }
+      }
+    }
+    // Shuffle positions
+    for (let i = floorPositions.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [floorPositions[i], floorPositions[j]] = [floorPositions[j], floorPositions[i]];
+    }
+    return floorPositions;
+  };
+
+  const startGame = () => {
+    generateDungeon((newDungeon) => {
+      const positions = getShuffledFloorPositions(newDungeon);
+      // Player position
+      const startPos = positions.shift();
+      setPlayer({ x: startPos.x, y: startPos.y, hp: 100, maxHp: 100, attack: 10, level: 1, exp: 0 });
+      // Enemies
+      const newEnemies = [];
+      for (let i = 0; i < 10 && positions.length; i++) {
+        const pos = positions.shift();
+        newEnemies.push({
+          x: pos.x,
+          y: pos.y,
+          hp: 20 + i * 5,
+          maxHp: 20 + i * 5,
+          attack: 5 + i * 2,
+          type: i % 3 === 0 ? 'goblin' : i % 3 === 1 ? 'skeleton' : 'orc'
+        });
+      }
+      setEnemies(newEnemies);
+      // Items
+      const newItems = [];
+      for (let i = 0; i < 5 && positions.length; i++) {
+        const pos = positions.shift();
+        newItems.push({
+          x: pos.x,
+          y: pos.y,
+          type: i % 2 === 0 ? 'health' : 'weapon'
+        });
+      }
+      setItems(newItems);
+      setDungeon(newDungeon);
+      setGameStarted(true);
+      setScore(0);
+      setMessage('Welcome to the dungeon! Use arrow keys to move.');
+    });
+  };
+
+  const generateDungeon = (callback) => {
     const newDungeon = Array(DUNGEON_SIZE).fill(null).map(() => Array(DUNGEON_SIZE).fill('wall'));
     
     // Create rooms
@@ -49,40 +108,7 @@ function DungeonCrawler({ user, token }) {
     
     setDungeon(newDungeon);
     
-    // Generate enemies
-    const newEnemies = [];
-    for (let i = 0; i < 10; i++) {
-      let x, y;
-      do {
-        x = Math.floor(Math.random() * DUNGEON_SIZE);
-        y = Math.floor(Math.random() * DUNGEON_SIZE);
-      } while (newDungeon[y][x] !== 'floor' || (x === 1 && y === 1));
-      
-      newEnemies.push({
-        x, y,
-        hp: 20 + i * 5,
-        maxHp: 20 + i * 5,
-        attack: 5 + i * 2,
-        type: i % 3 === 0 ? 'goblin' : i % 3 === 1 ? 'skeleton' : 'orc'
-      });
-    }
-    setEnemies(newEnemies);
-    
-    // Generate items
-    const newItems = [];
-    for (let i = 0; i < 5; i++) {
-      let x, y;
-      do {
-        x = Math.floor(Math.random() * DUNGEON_SIZE);
-        y = Math.floor(Math.random() * DUNGEON_SIZE);
-      } while (newDungeon[y][x] !== 'floor' || (x === 1 && y === 1));
-      
-      newItems.push({
-        x, y,
-        type: i % 2 === 0 ? 'health' : 'weapon'
-      });
-    }
-    setItems(newItems);
+    if (callback) callback(newDungeon);
   };
 
   const handleKeyPress = (e) => {
