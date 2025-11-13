@@ -9,6 +9,7 @@ import RocketMans from './components/games/RocketMans';
 import DungeonCrawler from './components/games/DungeonCrawler';
 import PersonalityQuiz from './components/games/PersonalityQuiz';
 import WouldYouRather from './components/games/WouldYouRather';
+import Zork from './components/games/Zork';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -62,6 +63,7 @@ function App() {
           <Route path="/game/dungeon" element={<DungeonCrawler user={user} token={token} />} />
           <Route path="/game/personality-quiz" element={<PersonalityQuiz user={user} token={token} />} />
           <Route path="/game/would-you-rather" element={<WouldYouRather user={user} token={token} />} />
+          <Route path="/game/zork" element={<Zork />} />
         </Routes>
       </div>
     </Router>

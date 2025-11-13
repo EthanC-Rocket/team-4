@@ -57,6 +57,12 @@ function Hub({ user, onLogout, token }) {
       path: '/game/would-you-rather',
       icon: '🤔',
       description: 'Make tough choices'
+    },
+    {
+      name: 'Zork',
+      path: '/game/zork',
+      icon: '📜',
+      description: 'Text adventure in classic D&D style'
     }
   ];
 
