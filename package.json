@@ -1,0 +1,21 @@
+{
+  "name": "gamehub",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start":  "concurrently \"cd backend && py app.py\" \"cd frontend && npm start\"",
+    "install": "concurrently \"cd backend && pip install -r requirements.txt\" \"cd frontend && npm install\"",
+    "build": "cd frontend && npm run build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.3",
+    "react-bootstrap": "^2.10.2",
+    "express": "^4.19.2"
+  }
+}

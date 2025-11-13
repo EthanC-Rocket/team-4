@@ -1,3 +1,12 @@
+:Root {
+
+  --rocketPurple : #990099;
+  --rocketDark: #4500A4;
+  --rocketAlt: #751ECA;
+  --rocketBlue: #503EFF;
+  --rocketLight: #D257FC; 
+}
+
 * {
   margin: 0;
   padding: 0;

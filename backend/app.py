@@ -34,7 +34,7 @@ class Score(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     game_name = db.Column(db.String(50), nullable=False)
     score = db.Column(db.Integer, nullable=False)
-    metadata = db.Column(db.String(500))  # JSON string for additional data
+    score_metadata = db.Column(db.String(500))  # JSON string for additional data
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 # Create tables
@@ -111,7 +111,7 @@ def get_scores():
             game_scores[score.game_name] = {
                 'game_name': score.game_name,
                 'score': score.score,
-                'metadata': score.metadata,
+                'score_metadata': score.metadata,
                 'created_at': score.created_at.isoformat()
             }
     
@@ -140,7 +140,7 @@ def add_score():
             'id': new_score.id,
             'game_name': new_score.game_name,
             'score': new_score.score,
-            'metadata': new_score.metadata,
+            'score_metadata': new_score.metadata,
             'created_at': new_score.created_at.isoformat()
         }
     }), 201
