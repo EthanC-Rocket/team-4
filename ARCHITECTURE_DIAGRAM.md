@@ -1,88 +1,88 @@
 # GameHub - Architecture Diagram
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                                  FRONTEND                                    │
-│                         React Application (Port 3000)                        │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                               │
+┌───────────────────────────────────────────────────────────────────────────┐
+│                                  FRONTEND                                 │
+│                         React Application (Port 3000)                     │
+├───────────────────────────────────────────────────────────────────────────┤
+│                                                                           │
 │  ┌─────────────┐  ┌──────────────┐  ┌─────────────┐  ┌─────────────────┐  │
 │  │   App.js    │  │   Hub.js     │  │  Login.js   │  │  Register.js    │  │
 │  │  (Router)   │  │ (Dashboard)  │  │             │  │                 │  │
 │  └─────────────┘  └──────────────┘  └─────────────┘  └─────────────────┘  │
-│                                                                               │
-│  ┌───────────────────────────── GAME COMPONENTS ───────────────────────────┐│
-│  │                                                                           ││
+│                                                                           │
+│  ┌───────────────────────────── GAME COMPONENTS ─────────────────────────┐│
+│  │                                                                       ││
 │  │  ┌────────────┐  ┌─────────────┐  ┌──────────────┐  ┌────────────┐    ││
 │  │  │  Sudoku    │  │ RocketMans  │  │   Dungeon    │  │ Personality│    ││
 │  │  │            │  │             │  │   Crawler    │  │    Quiz    │    ││
 │  │  └────────────┘  └─────────────┘  └──────────────┘  └────────────┘    ││
-│  │                                                                           ││
+│  │                                                                       ││
 │  │  ┌────────────┐  ┌─────────────┐  ┌──────────────┐  ┌────────────┐    ││
 │  │  │   Zork     │  │ One Night   │  │    Rocxs     │  │   Would    │    ││
 │  │  │            │  │ At Rocket   │  │              │  │ You Rather │    ││
 │  │  └────────────┘  └─────────────┘  └──────────────┘  └────────────┘    ││
-│  │                                                                           ││
-│  └───────────────────────────────────────────────────────────────────────┘ │
-│                                                                               │
-└───────────────────────────────────┬───────────────────────────────────────┬─┘
-                                    │                                       │
+│  │                                                                       ││
+│  └───────────────────────────────────────────────────────────────────────┘│
+│                                                                           │
+└───────────────────────────────────┬─────────────────────────────────────┬─┘
+                                    │                                     │
                     Proxy: localhost:5000                  Direct: localhost:8000
-                                    │                                       │
-                                    ▼                                       ▼
-┌───────────────────────────────────────────────┐  ┌─────────────────────────────┐
-│           BACKEND API #1                      │  │    BACKEND API #2           │
-│      Flask Server (Port 5000)                 │  │  Flask Server (Port 8000)   │
-├───────────────────────────────────────────────┤  ├─────────────────────────────┤
-│                                               │  │                             │
-│  ┌──────────────────────────────────────┐   │  │  ┌───────────────────────┐ │
-│  │         app.py (Main API)            │   │  │  │  questions_flask_api  │ │
-│  │  ┌────────────────────────────────┐  │   │  │  │         .py           │ │
-│  │  │  • User Authentication (JWT)   │  │   │  │  └───────────────────────┘ │
-│  │  │  • User Registration/Login     │  │   │  │                             │
-│  │  │  • Session Management          │  │   │  │  ┌───────────────────────┐ │
-│  │  │  • Score Tracking & Storage    │  │   │  │  │  questions_dao.py     │ │
-│  │  │  • Game Progress Persistence   │  │   │  │  │  (Data Access Layer)  │ │
-│  │  └────────────────────────────────┘  │   │  │  └───────────────────────┘ │
-│  │                                       │   │  │                             │
-│  │  ┌────────────────────────────────┐  │   │  │  ┌───────────────────────┐ │
-│  │  │      quiz_engine.py            │  │   │  │  │ question_validator.py │ │
-│  │  │  (Personality Quiz Logic)      │  │   │  │  │  (Validation Logic)   │ │
-│  │  └────────────────────────────────┘  │   │  │  └───────────────────────┘ │
-│  └──────────────────────────────────────┘   │  │                             │
-│                                               │  └─────────────┬───────────────┘
-│  ┌──────────────────────────────────────┐   │                │
-│  │       Flask-SQLAlchemy ORM           │   │                │
-│  │       Flask-CORS                     │   │                │
-│  │       Flask-JWT-Extended             │   │                │
-│  │       bcrypt (Password Hashing)      │   │                │
-│  └──────────────────────────────────────┘   │                │
+                                    │                                     │
+                                    ▼                                     ▼
+┌───────────────────────────────────────────────┐  ┌────────────────────────────┐
+│           BACKEND API #1                      │  │    BACKEND API #2          │
+│      Flask Server (Port 5000)                 │  │  Flask Server (Port 8000)  │
+├───────────────────────────────────────────────┤  ├────────────────────────────┤
+│                                               │  │                            │
+│  ┌──────────────────────────────────────┐     │  │  ┌───────────────────────┐ │
+│  │         app.py (Main API)            │     │  │  │  questions_flask_api  │ │
+│  │  ┌────────────────────────────────┐  │     │  │  │         .py           │ │
+│  │  │  • User Authentication (JWT)   │  │     │  │  └───────────────────────┘ │
+│  │  │  • User Registration/Login     │  │     │  │                            │
+│  │  │  • Session Management          │  │     │  │  ┌───────────────────────┐ │
+│  │  │  • Score Tracking & Storage    │  │     │  │  │  questions_dao.py     │ │
+│  │  │  • Game Progress Persistence   │  │     │  │  │  (Data Access Layer)  │ │
+│  │  └────────────────────────────────┘  │     │  │  └───────────────────────┘ │
+│  │                                      │     │  │                            │
+│  │  ┌────────────────────────────────┐  │     │  │  ┌───────────────────────┐ │
+│  │  │      quiz_engine.py            │  │     │  │  │ question_validator.py │ │
+│  │  │  (Personality Quiz Logic)      │  │     │  │  │  (Validation Logic)   │ │
+│  │  └────────────────────────────────┘  │     │  │  └───────────────────────┘ │
+│  └──────────────────────────────────────┘     │  │                            │
+│                                               │  └─────────────┬──────────────┘
+│  ┌──────────────────────────────────────┐     │                │
+│  │       Flask-SQLAlchemy ORM           │     │                │
+│  │       Flask-CORS                     │     │                │
+│  │       Flask-JWT-Extended             │     │                │
+│  │       bcrypt (Password Hashing)      │     │                │
+│  └──────────────────────────────────────┘     │                │
 │                                               │                │
 └───────────────────┬───────────────────────────┘                │
                     │                                            │
                     ▼                                            ▼
 ┌───────────────────────────────────────────────┐  ┌─────────────────────────────┐
 │          DATABASE #1                          │  │      DATABASE #2            │
-│        SQLite/MySQL                           │  │    JSON File Storage        │
+│              SQLite                           │  │    JSON File Storage        │
 ├───────────────────────────────────────────────┤  ├─────────────────────────────┤
 │                                               │  │                             │
-│  ┌─────────────────────────────────────┐    │  │  ┌───────────────────────┐ │
-│  │         users TABLE                 │    │  │  │  would-you-rather-    │ │
-│  │  • id (Primary Key)                 │    │  │  │  questions.json       │ │
-│  │  • username (Unique)                │    │  │  │                       │ │
-│  │  • email                            │    │  │  │  {                    │ │
-│  │  • password_hash                    │    │  │  │    "questions": [     │ │
-│  │  • created_at                       │    │  │  │      {                │ │
-│  └─────────────────────────────────────┘    │  │  │        "id": int,     │ │
-│                                               │  │  │        "option1": str,│ │
-│  ┌─────────────────────────────────────┐    │  │  │        "option2": str,│ │
-│  │         scores TABLE                │    │  │  │        "category": str│ │
-│  │  • id (Primary Key)                 │    │  │  │        "votes1": int, │ │
-│  │  • user_id (Foreign Key)            │    │  │  │        "votes2": int  │ │
-│  │  • game_name                        │    │  │  │      }                │ │
-│  │  • score                            │    │  │  │    ]                  │ │
-│  │  • achieved_at                      │    │  │  │  }                    │ │
-│  └─────────────────────────────────────┘    │  │  └───────────────────────┘ │
+│  ┌─────────────────────────────────────┐      │  │  ┌───────────────────────┐  │
+│  │         users TABLE                 │      │  │  │  would-you-rather-    │  │
+│  │  • id (Primary Key)                 │      │  │  │  questions.json       │  │
+│  │  • username (Unique)                │      │  │  │                       │  │
+│  │  • email                            │      │  │  │  {                    │  │
+│  │  • password_hash                    │      │  │  │    "questions": [     │  │
+│  │  • created_at                       │      │  │  │      {                │  │
+│  └─────────────────────────────────────┘      │  │  │        "id": int,     │  │
+│                                               │  │  │        "option1": str,│  │
+│  ┌─────────────────────────────────────┐      │  │  │        "option2": str,│  │
+│  │         scores TABLE                │      │  │  │        "category": str│  │
+│  │  • id (Primary Key)                 │      │  │  │        "votes1": int, │  │
+│  │  • user_id (Foreign Key)            │      │  │  │        "votes2": int  │  │
+│  │  • game_name                        │      │  │  │      }                │  │
+│  │  • score                            │      │  │  │    ]                  │  │
+│  │  • achieved_at                      │      │  │  │  }                    │  │
+│  └─────────────────────────────────────┘      │  │  └───────────────────────┘  │
 │                                               │  │                             │
 │  Location: backend/instance/database.db       │  │  Location: Root directory   │
 └───────────────────────────────────────────────┘  └─────────────────────────────┘
@@ -93,41 +93,41 @@
 ═══════════════════════════════════════════════════════════════════════════════
 
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│  USER AUTHENTICATION FLOW (API #1)                                           │
+│  USER AUTHENTICATION FLOW (API #1)                                          │
 ├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                               │
-│  1. User enters credentials in Login.js                                      │
-│  2. POST /api/login → app.py (Port 5000)                                     │
-│  3. app.py validates against users TABLE (Database #1)                       │
-│  4. JWT token generated and returned to frontend                             │
-│  5. Token stored in localStorage, included in subsequent requests            │
-│                                                                               │
+│                                                                             │
+│  1. User enters credentials in Login.js                                     │
+│  2. POST /api/login → app.py (Port 5000)                                    │
+│  3. app.py validates against users TABLE (Database #1)                      │
+│  4. JWT token generated and returned to frontend                            │
+│  5. Token stored in localStorage, included in subsequent requests           │
+│                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│  SCORE TRACKING FLOW (API #1)                                                │
+│  SCORE TRACKING FLOW (API #1)                                               │
 ├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                               │
-│  1. User plays a game (e.g., Sudoku, RocketMans)                             │
-│  2. Game component sends score: POST /api/scores (with JWT token)            │
-│  3. app.py validates token and saves to scores TABLE (Database #1)           │
-│  4. Hub.js fetches scores: GET /api/scores → displays in sidebar             │
-│                                                                               │
+│                                                                             │
+│  1. User plays a game (e.g., Sudoku, RocketMans)                            │
+│  2. Game component sends score: POST /api/scores (with JWT token)           │
+│  3. app.py validates token and saves to scores TABLE (Database #1)          │
+│  4. Hub.js fetches scores: GET /api/scores → displays in sidebar            │
+│                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│  WOULD YOU RATHER FLOW (API #2)                                              │
+│  WOULD YOU RATHER FLOW (API #2)                                             │
 ├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                               │
-│  1. WouldYouRather.js component loads                                         │
-│  2. GET http://127.0.0.1:8000/questions/random                                │
-│  3. questions_flask_api.py → questions_dao.py                                 │
-│  4. Read from would-you-rather-questions.json (Database #2)                   │
-│  5. Return random question with vote counts                                   │
-│  6. User votes: POST /questions/{id}/upvote?option=1                          │
-│  7. DAO updates JSON file, increments vote counter                            │
-│  8. Updated question returned to display results                              │
-│                                                                               │
+│                                                                             │
+│  1. WouldYouRather.js component loads                                       │
+│  2. GET http://127.0.0.1:8000/questions/random                              │
+│  3. questions_flask_api.py → questions_dao.py                               │
+│  4. Read from would-you-rather-questions.json (Database #2)                 │
+│  5. Return random question with vote counts                                 │
+│  6. User votes: POST /questions/{id}/upvote?option=1                        │
+│  7. DAO updates JSON file, increments vote counter                          │
+│  8. Updated question returned to display results                            │
+│                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 
 
