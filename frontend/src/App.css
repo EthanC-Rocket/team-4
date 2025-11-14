@@ -10,9 +10,10 @@
 .sidebar {
   width: 280px;
   background: rgba(255, 255, 255, 0.95);
-  padding: 20px;
+  padding: 25px;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
   overflow-y: auto;
+  background-color: var(--rocketDark);
 }
 
 .sidebar h2 {
@@ -58,13 +59,15 @@
 }
 
 .user-info {
-  color: white;
+  background-color: white;
+  border: 2px solid white;
+  border-radius: 5px;
   font-size: 18px;
   margin-bottom: 10px;
 }
 
 .logout-btn {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--rocketBlue);
   color: white;
   border: 2px solid white;
   padding: 8px 16px;

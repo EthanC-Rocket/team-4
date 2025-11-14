@@ -41,7 +41,7 @@ function Zork() {
     <>
       <button className="back-btn" onClick={() => navigate('/')}>← Back to Hub</button>
       <div className="zork-container" style={{ maxWidth: 600, margin: '40px auto', background: '#222', color: '#eee', padding: 20, borderRadius: 8 }}>
-        <h2>Zork Demo</h2>
+        <h2>Zork</h2>
         <div className="zork-history" style={{ minHeight: 200, marginBottom: 20 }}>
           {history.map((line, idx) => <div key={idx}>{line}</div>)}
         </div>

@@ -279,6 +279,14 @@
       "category": "SpecialCat",
       "option1Votes": 0,
       "option2Votes": 0
+    },
+    {
+      "id": 36,
+      "option1": "Rocks?",
+      "option2": "Rocks",
+      "category": "Rocks",
+      "option1Votes": 0,
+      "option2Votes": 0
     }
   ]
 }

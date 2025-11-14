@@ -18,20 +18,14 @@ function Hub({ user, onLogout, token }) {
 
   const fetchScores = async () => {
     try {
-      console.log('Fetching scores for user:', user?.username, 'with token:', token ? 'present' : 'missing');
       const response = await fetch('/api/scores', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
-      console.log('Response status:', response.status);
       const data = await response.json();
-      console.log('Response data:', data);
       if (response.ok) {
-        console.log('Setting scores:', data);
         setScores(data);
-      } else {
-        console.error('Failed to fetch scores:', response.status, data);
       }
     } catch (err) {
       console.error('Failed to fetch scores:', err);
@@ -40,9 +34,15 @@ function Hub({ user, onLogout, token }) {
 
   const games = [
     {
-      name: 'Sudoku',
+      name: 'ROCXS',
+      path: '/game/rocxs',
+      icon: '🪨',
+      description: 'The ultimate ROCXS challenge!'
+    },
+    {
+      name: 'Matrix Sudoku',
       path: '/game/sudoku',
-      icon: '🔢',
+      icon: '⚡',
       description: 'Classic number puzzle game'
     },
     {
@@ -58,10 +58,10 @@ function Hub({ user, onLogout, token }) {
       description: 'Explore dungeons and fight monsters'
     },
     {
-      name: 'Personality Quiz',
+      name: 'Athlete Personality Quiz',
       path: '/game/personality-quiz',
-      icon: '🧠',
-      description: 'Discover your personality type'
+      icon: '🏃‍♂️',
+      description: 'Discover your athletic personality'
     },
     {
       name: 'Would You Rather',
@@ -75,18 +75,36 @@ function Hub({ user, onLogout, token }) {
       icon: '📜',
       description: 'Text adventure in classic D&D style'
     },
+      {
+      name: 'Pet Rock Battler',
+      path: '/',
+      icon: '🐲',
+      description: 'Summon pet Rocks to fight other peoples pet rocks'
+    },
     {
+      name: 'Trivianado',
+      path: '/',
+      icon: '🌪️',
+      description: 'Extreme Trivia Challenge'
+    },
+     {
+      name: 'SWaB Battlegrounds',
+      path: '/',
+      icon: '📍',
+      description: 'Fight as a SWaB in a battle royale'
+    },
+     {
       name: 'One Night At Rocket',
       path: '/game/one-night-at-rocket',
       icon: '👾',
       description: 'Survive the night at Rocket HQ!'
     },
-    {
-      name: 'ROCXS',
-      path: '/game/rocxs',
-      icon: '🪨',
-      description: 'The ultimate ROCXS challenge!'
-    }
+     {
+      name: 'Cornucopia Clash',
+      path: '/',
+      icon: '💥',
+      description: 'Long awaited sequel to the hit game Cornucopia'
+    },
   ];
 
   return (
@@ -97,8 +115,26 @@ function Hub({ user, onLogout, token }) {
           <button className="hub-ad-close" onClick={handleCloseAd}>X</button>
         </div>
       )}
+      <div className="sidebar">
+       {user ? (
+            <div className="user-info">
+              <p>Welcome, {user.username}!</p>
+              <button className="logout-btn" onClick={onLogout}>Logout</button>
+            </div>
+          ) : (
+            <div className="user-info">
+                <p>Welcome, Guest!</p>
+              <Link to="/login">
+                <button className="logout-btn">Login</button>
+              </Link>
+              {' '}
+              <Link to="/register">
+                <button className="logout-btn">Register</button>
+              </Link>
+            </div>
+          )}
       {user && (
-        <div className="sidebar">
+        <>
           <h2>Your Scores</h2>
           {scores.length > 0 ? (
             scores.map((score, index) => (
@@ -110,28 +146,24 @@ function Hub({ user, onLogout, token }) {
           ) : (
             <p>No scores yet. Play some games!</p>
           )}
-        </div>
+        </>
       )}
+      {user ? (<></>
+          ) : (<>
+            <div className="user-info">
+                <p>Register to record your scores!</p>
+            </div>
+            <div>
+                 <img src={adImg} alt="Ad" style={{ width: '225px' }} className="hub-ad-image" />
+              </div>
+              </>
+          )}
+      </div>
       
       <div className="main-content">
         <div className="hub-header">
-          <h1>🎮 GameHub</h1>
-          {user ? (
-            <div className="user-info">
-              <p>Welcome, {user.username}!</p>
-              <button className="logout-btn" onClick={onLogout}>Logout</button>
-            </div>
-          ) : (
-            <div className="user-info">
-              <Link to="/login">
-                <button className="logout-btn">Login</button>
-              </Link>
-              {' '}
-              <Link to="/register">
-                <button className="logout-btn">Register</button>
-              </Link>
-            </div>
-          )}
+          <h1> Boulder Arcade</h1>
+          <h2> Where you find games that rock</h2>
         </div>
 
         <div className="games-grid">
